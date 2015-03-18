@@ -1,0 +1,29 @@
+#---------------------------------------
+# Server configuration
+#---------------------------------------
+server:
+  applicationConnectors:
+    - type: http
+      port: 9190
+  adminConnectors:
+    - type: http
+      port: 9191
+#---------------------------------------
+# Logging configuration
+#---------------------------------------
+logging:
+  level: INFO
+
+  loggers:
+    io.dropwizard: INFO
+    
+  appenders:
+    - type: console
+      
+#---------------------------------------
+# Application properties
+#---------------------------------------
+properties:
+  key: WCRS_ADDRESS_OSPLACES_KEY
+  url: "https://api.ordnancesurvey.co.uk/places/v1/addresses"
+  delimiter: ","
