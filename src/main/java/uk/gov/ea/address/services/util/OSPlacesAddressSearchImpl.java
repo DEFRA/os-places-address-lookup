@@ -111,12 +111,11 @@ public class OSPlacesAddressSearchImpl implements OSPlacesAddressSearch
                     // choose to filter them out.
                     Address thisAddress = OSPlacesAddressUtils.getAddressByJson(jArray.optJSONObject(i).optJSONObject("DPA"), delimiter);
                     boolean duplicateFound = false;
-                    for (int j = 0; j < addresses.size(); j++)
+                    for (int j = 0; j < addresses.size() && !duplicateFound; j++)
                     {
                         if (thisAddress.getUprn().equals(addresses.get(j).getUprn()))
                         {
                             duplicateFound = true;
-                            break;
                         }
                     }
                     if (!duplicateFound)

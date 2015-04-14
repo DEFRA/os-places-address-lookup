@@ -348,6 +348,7 @@ public class Address implements Comparable<Address>
                         foundFirstLetter = true;
                         sortingValue += (Character.getNumericValue(buildingName.charAt(index)) / CHAR_MAX);
                     }
+                    index++;
                 }
             }
         }
