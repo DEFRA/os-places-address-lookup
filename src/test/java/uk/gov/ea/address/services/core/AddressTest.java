@@ -167,13 +167,42 @@ public class AddressTest
     }
     
     @Test
+    public void testSortingAddressesStartingWithFlat()
+    {
+        // Addresses which don't contain a Building Number or Building Name may
+        // start with 'Flat NNN'; in this case, sort numerically by Flat Number.
+        List<Address> addresses = Arrays.asList(
+            createAddressForSortingTest("", "", "Flat 11, The House, The Road, The Town, AB1 2CD"),
+            createAddressForSortingTest("", "", "Flat 2, The House, The Road, The Town, AB1 2CD"),
+            createAddressForSortingTest("", "", "Flat 10, The House, The Road, The Town, AB1 2CD"),
+            createAddressForSortingTest("", "", "Flat 1 , The House, The Road, The Town, AB1 2CD"), // Notice space after flat number
+            createAddressForSortingTest("", "", "Flat 3, The House, The Road, The Town, AB1 2CD")
+        );
+
+        for (Address address : addresses)
+        {
+            address.calculateSortingValue();
+        }
+
+        java.util.Collections.sort(addresses);
+
+        Assert.assertEquals("Flat 1 , The House, The Road, The Town, AB1 2CD", addresses.get(0).getPartial());
+        Assert.assertEquals("Flat 2, The House, The Road, The Town, AB1 2CD",  addresses.get(1).getPartial());
+        Assert.assertEquals("Flat 3, The House, The Road, The Town, AB1 2CD",  addresses.get(2).getPartial());
+        Assert.assertEquals("Flat 10, The House, The Road, The Town, AB1 2CD", addresses.get(3).getPartial());
+        Assert.assertEquals("Flat 11, The House, The Road, The Town, AB1 2CD", addresses.get(4).getPartial());
+    }
+    
+    @Test
     public void testSortingByAllCriteria()
     {
         // Addresses with no number should be sorted alphabetically and appear
-        // before any addresses with a recognised number.
+        // before any addresses with a recognised number.  Addresses starting
+        // with 'Flat ' should appear last.
         List<Address> addresses = Arrays.asList(
             createAddressForSortingTest("7", "",   "Alpha Business, The Road, The Town, AB1 2CD"),
             createAddressForSortingTest("",  "",   "Gamma Business, The Road, The Town, AB1 2CD"),
+            createAddressForSortingTest("",  "",   "Flat 2, The House, The Road, The Town, AB1 2CD"),
             createAddressForSortingTest("",  "6a", "Beta Business, The Road, The Town, AB1 2CD"),
             createAddressForSortingTest("",  "",   "Delta Business, The Road, The Town, AB1 2CD")
         );
@@ -185,10 +214,11 @@ public class AddressTest
         
         java.util.Collections.sort(addresses);
         
-        Assert.assertEquals("Delta Business, The Road, The Town, AB1 2CD", addresses.get(0).getPartial());
-        Assert.assertEquals("Gamma Business, The Road, The Town, AB1 2CD", addresses.get(1).getPartial());
-        Assert.assertEquals("Beta Business, The Road, The Town, AB1 2CD",  addresses.get(2).getPartial());
-        Assert.assertEquals("Alpha Business, The Road, The Town, AB1 2CD", addresses.get(3).getPartial());
+        Assert.assertEquals("Delta Business, The Road, The Town, AB1 2CD",    addresses.get(0).getPartial());
+        Assert.assertEquals("Gamma Business, The Road, The Town, AB1 2CD",    addresses.get(1).getPartial());
+        Assert.assertEquals("Beta Business, The Road, The Town, AB1 2CD",     addresses.get(2).getPartial());
+        Assert.assertEquals("Alpha Business, The Road, The Town, AB1 2CD",    addresses.get(3).getPartial());
+        Assert.assertEquals("Flat 2, The House, The Road, The Town, AB1 2CD", addresses.get(4).getPartial());
     }
     
     private Address createAddressForSortingTest(String buildingNumber, String buildingName, String partial)
