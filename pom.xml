@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.gov.ea</groupId>
 	<artifactId>address-lookup-osplaces</artifactId>
-	<version>0.1</version>
+	<version>0.1.1</version>
 	<name>osplaces-address-lookup</name>
 	<description>Provides a RESTful API for the address lookup using OSPlaces</description>
 	<properties>
