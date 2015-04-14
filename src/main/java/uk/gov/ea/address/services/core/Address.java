@@ -1,10 +1,10 @@
 package uk.gov.ea.address.services.core;
 
 import java.util.List;
+import java.lang.Comparable;
 
-public class Address
+public class Address implements Comparable<Address>
 {
-
     private String moniker;
 
     private String uprn;
@@ -48,6 +48,11 @@ public class Address
     private String departmentName;
 
     private String doubleDependentLocality;
+
+    // Not part of the address; used only for comparing this address to another
+    // in order to sort several addresses into a pleasant order.
+    private double sortingValue;
+    private static final double CHAR_MAX = 65536.0;
 
     public String getUprn()
     {
@@ -294,5 +299,83 @@ public class Address
         }
         return sb.toString();
     }
-
+    
+    // Determines a value, based upon the building number, which can be used
+    // to sort addresses into a user-friendly order.  We attempt to take account
+    // of flat numbers such as '15A' in addition to just the raw number.
+    public void calculateSortingValue()
+    {
+        sortingValue = 0;
+        
+        // First, attempt to convert Building Number into a numeric value.
+        boolean success = false;
+        if ((buildingNumber != null) && !buildingNumber.isEmpty())
+        {
+            try
+            {
+                sortingValue = Integer.parseInt(buildingNumber);
+                success = true;
+            }
+            catch (NumberFormatException e)
+            {
+                success = false;
+            }
+        }
+        
+        // If that didn't work, attempt to extract a number from the Building Name.
+        try
+        {
+            if (!success && (buildingName != null) && !buildingName.isEmpty() && Character.isDigit(buildingName.charAt(0)))
+            {
+                int len = buildingName.length();
+                int index = 0;
+                
+                // First try to extract the numeric portion.
+                while ((index < len) && Character.isDigit(buildingName.charAt(index)))
+                {
+                    sortingValue = (sortingValue * 10) + Character.getNumericValue(buildingName.charAt(index));
+                    index++;
+                }
+                
+                // Now, maybe there is a letter after the number, as in '15A'; try
+                // to take account of this.  We're lazy and only take account of the
+                // first letter.
+                boolean foundFirstLetter = false;
+                while ((index < len) && !foundFirstLetter)
+                {
+                    if (Character.isLetter(buildingName.charAt(index)))
+                    {
+                        foundFirstLetter = true;
+                        sortingValue += (Character.getNumericValue(buildingName.charAt(index)) / CHAR_MAX);
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            // We don't really care what the error was; just swallow it and
+            // allow the address to be sorted via its text value.
+            sortingValue = 0;
+        }
+    }
+    
+    // Allows addresses to be compared, in turn allowing them to be sorted.
+    public int compareTo(Address other)
+    {
+        int result = 0;
+        
+        if ((this.sortingValue != 0) || (other.sortingValue != 0))
+        {
+            // The multiplication here is required because we need to return
+            // an integer, but our sorting values may contain fractional values.
+            result = (int)((this.sortingValue - other.sortingValue) * CHAR_MAX);
+        }
+        else if ((this.partial != null) && !this.partial.isEmpty() &&
+                (other.partial != null) && !other.partial.isEmpty())
+        {
+            result = this.partial.compareToIgnoreCase(other.partial);
+        }
+        
+        return result;
+    }
 }

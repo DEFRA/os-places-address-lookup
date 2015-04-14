@@ -130,6 +130,9 @@ public class OSPlacesAddressUtils
         }
 
         address.setLines(lines);
+        
+        // Calculate a value that will help us if we need to sort this address.
+        address.calculateSortingValue();
 
         return address;
     }

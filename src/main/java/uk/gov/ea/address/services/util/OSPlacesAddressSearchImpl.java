@@ -2,6 +2,7 @@ package uk.gov.ea.address.services.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 import javax.ws.rs.core.MultivaluedMap;
 
@@ -30,7 +31,7 @@ public class OSPlacesAddressSearchImpl implements OSPlacesAddressSearch
     private String delimiter;
 
     private static final String ORDNANCE_SURVEY = "ordnance survey";
-
+    
     private static Logger logger = LoggerFactory.getLogger(OSPlacesAddressSearchImpl.class);
 
     public OSPlacesAddressSearchImpl(String url, String key, String delimiter)
@@ -85,7 +86,6 @@ public class OSPlacesAddressSearchImpl implements OSPlacesAddressSearch
 
         try
         {
-
             MultivaluedMap<String, String> queryParams = OSPlacesAddressUtils.getMultivaluedMap(key);
 
             if (null != postcode)
@@ -103,10 +103,31 @@ public class OSPlacesAddressSearchImpl implements OSPlacesAddressSearch
 
             if (null != jArray && jArray.length() > 0)
             {
+                // Add each returned address to our list of results.
                 for (int i = 0; i < jArray.length(); i++)
                 {
-                    addresses.add(OSPlacesAddressUtils.getAddressByJson(jArray.optJSONObject(i).optJSONObject("DPA"), delimiter));
+                    // It seems that OS Places sometimes includes 'duplicates' (entries
+                    // which have the same UPRN but are not binrary identical).  We
+                    // choose to filter them out.
+                    Address thisAddress = OSPlacesAddressUtils.getAddressByJson(jArray.optJSONObject(i).optJSONObject("DPA"), delimiter);
+                    boolean duplicateFound = false;
+                    for (int j = 0; j < addresses.size(); j++)
+                    {
+                        if (thisAddress.getUprn().equals(addresses.get(j).getUprn()))
+                        {
+                            duplicateFound = true;
+                            break;
+                        }
+                    }
+                    if (!duplicateFound)
+                    {
+                        addresses.add(thisAddress);
+                    }
                 }
+                
+                // The data from OS Places doesn't appear to be sorted by house number (for example),
+                // so lets make an attempt to sort the results in a useful order.
+                java.util.Collections.sort(addresses);
             }
             else
             {
