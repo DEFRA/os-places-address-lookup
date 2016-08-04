@@ -20,7 +20,14 @@ The file *configuration.yml* represents a template configuration. If you are hap
 
 ## Installation
 
-Clone the repository to your target machine then build it using Maven.
+Clone the repository to your target machine. You then need to set the following environment variables
+
+- `WCRS_ADDRESS_OSPLACES_KEY`
+- `WCRS_ADDRESS_OSPLACES_URL`
+
+When you execute the service it will pick these up from [configuration.yml](configuration.yml), but the unit tests which get run during a Maven build pick them up from environment variables. So ensure they are added to prevent failing builds.
+
+Now build it using Maven
 
 ```bash
 $ mvn clean package
