@@ -1,0 +1,10 @@
+language: java
+
+jdk:
+  - oraclejdk7
+
+env:
+  global:
+    # WCRS_ADDRESS_OSPLACES_KEY
+    - secure: "Ro6iANaY8RqnaxUZOIsBqQg3QFJ0UFZ+Z0TBwGSOoFMY8lqBOqXWGeDf0gd/ErqS9w5VU1GgJ+Y080bU76nVqxU2I0HBfjOiL+ah6NbSxN8W0hMshlbLBbDlc8kgnfM39IboSmNve5MZWUQ0D+TfiUOXHm+HZD2+RUxY7K7CudQ="
+    - WCRS_ADDRESS_OSPLACES_URL="https://api.ordnancesurvey.co.uk/places/v1/addresses"
