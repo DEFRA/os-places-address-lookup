@@ -1,5 +1,7 @@
 # OS places address lookup
 
+[![Build Status](https://travis-ci.org/EnvironmentAgency/os-places-address-lookup.svg?branch=feature%2Fadd-travis-ci-integration)](https://travis-ci.org/EnvironmentAgency/os-places-address-lookup)
+
 A REST based wrapper built using [Dropwizard](http://dropwizard.io/) around the [OS Places API](http://www.ordnancesurvey.co.uk/business-and-government/products/os-places/index.html).
 
 Not all features of the API are exposed with this service. It was built to support address lookup using a postcode for another service, and to provide the latitude and longitude for a given address.
