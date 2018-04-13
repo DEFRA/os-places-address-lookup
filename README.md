@@ -1,6 +1,6 @@
 # OS places address lookup
 
-[![Build Status](https://travis-ci.org/EnvironmentAgency/os-places-address-lookup.svg?branch=feature%2Fadd-travis-ci-integration)](https://travis-ci.org/EnvironmentAgency/os-places-address-lookup)
+[![Build Status](https://travis-ci.org/DEFRA/os-places-address-lookup.svg?branch=master)](https://travis-ci.org/DEFRA/os-places-address-lookup)
 
 A REST based wrapper built using [Dropwizard](http://dropwizard.io/) around the [OS Places API](http://www.ordnancesurvey.co.uk/business-and-government/products/os-places/index.html).
 
@@ -10,7 +10,7 @@ For further details about the OS Places API check out their [user guide](http://
 
 ## Prerequisites
 
-* [Java 7 JDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
+* [Java Open JDK 8](http://openjdk.java.net/install/)
 * [Maven](http://maven.apache.org/) (version 3.0 or above) - for building the service
 * Key and URL for [OS Places service](http://www.ordnancesurvey.co.uk/business-and-government/products/os-places/index.html)
 
