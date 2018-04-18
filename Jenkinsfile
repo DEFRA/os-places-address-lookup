@@ -7,11 +7,11 @@ pipeline {
                 sh "./mvnw -B -DskipTests=true -T 1C clean package"
             }
         }
-        post {
-            always {
-                archiveArtifacts artifacts: 'target/*.jar', onlyIfSuccessful: true
-                cleanWs cleanWhenFailure: false
-            }
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: 'target/*.jar', onlyIfSuccessful: true
+            cleanWs cleanWhenFailure: false
         }
     }
 }
