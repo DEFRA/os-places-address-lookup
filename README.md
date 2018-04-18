@@ -11,46 +11,60 @@ For further details about the OS Places API check out their [user guide](http://
 ## Prerequisites
 
 * [Java Open JDK 8](http://openjdk.java.net/install/)
-* [Maven](http://maven.apache.org/) (version 3.0 or above) - for building the service
 * Key and URL for [OS Places service](http://www.ordnancesurvey.co.uk/business-and-government/products/os-places/index.html)
+
+## Installation
+
+Clone the repo
+
+```bash
+git clone https://github.com/DEFRA/os-places-address-lookup && cd os-places-address-lookup
+```
 
 ## Configuration
 
 The file *configuration.yml* represents a template configuration. If you are happy to use the defaults the only value you'll need to replace is `WCRS_ADDRESS_OSPLACES_KEY`.
 
-## Installation
+## Build
 
-Clone the repository to your target machine. You then need to set the following environment variables
+The project uses [Maven](https://maven.apache.org/) as its build tool, and [Maven Wrapper](https://github.com/takari/maven-wrapper) to handle getting a version of Maven on your machine to download the project.
+
+So to build the project call
+
+```bash
+./mvnw clean package
+```
+
+The normal command on a machine where Maven is installed is `mvn clean package`.
+
+## Run tests
+
+Currently the unit tests included in the project rely on an actual connection to OS Places as it has not been mocked. Because of this it can cause issues during a typical Maven build as by default it will attempt to run any unit tests it finds.
+
+Also the unit tests cannot read from the [configuration.yml](configuration.yml) as the app would when started, so you must set some environment variables before attempting to run the tests
 
 - `WCRS_ADDRESS_OSPLACES_KEY`
 - `WCRS_ADDRESS_OSPLACES_URL`
 
-When you execute the service it will pick these up from [configuration.yml](configuration.yml), but the unit tests which get run during a Maven build pick them up from environment variables. So ensure they are added to prevent failing builds.
-
-Now build it using Maven
+For these reasons we have configured Maven not to automatically run tests when a build takes place. Instead those working on the project should manually run the tests as and when required
 
 ```bash
-$ mvn clean package
+./mvnw test
 ```
-
-This will automatically run the tests as well which require a working connection to the OS Places API.
-
 
 ## Start the service
 
 Once built execute the jar file, providing 'server' and the name of the configuration file as arguments.
 
-From the command line:
-
 ```bash
-$ java -jar target/address-lookup-osplaces-0.1.jar server configuration.yml
+java -jar target/address-lookup-osplaces-*.jar server configuration.yml
 ```
 
-Once the application server is started you should be able to access the service in your browser. Confirm this by going to [http://localhost:9191](http://localhost:9191) and the operational menu should be visible.
+Once the application server is started you should be able to access the service in your browser. Confirm this by going to [http://localhost:9191](http://localhost:9191) and the operational menu will be visible.
 
 ## Using the service
 
-The following provide examples of how to use the service.
+The following provides examples of how to use the service.
 
 1) Get a list of all addresses for a given postcode
 
