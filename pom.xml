@@ -2,16 +2,16 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.gov.ea</groupId>
-	<artifactId>address-lookup-osplaces</artifactId>
-	<version>0.1.1</version>
-	<name>osplaces-address-lookup</name>
+	<artifactId>os-places-address-lookup</artifactId>
+	<version>0.2.0</version>
+	<name>os-places-address-lookup</name>
 	<description>Provides a RESTful API for the address lookup using OSPlaces</description>
 	<properties>
 		<slf4j.version>1.7.6</slf4j.version>
 		<dropwizard.version>1.3.1</dropwizard.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.test.skip>true</maven.test.skip>
+		<maven.test.skip>false</maven.test.skip>
 	</properties>
 	<dependencies>
 		<dependency>

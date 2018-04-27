@@ -44,7 +44,7 @@ public class AddressLookupApplicationTest
     public void testGetName()
     {
         Assert.assertNotNull(application.getName());
-        Assert.assertEquals("address-lookup-osplaces", application.getName());
+        Assert.assertEquals("os-places-address-lookup", application.getName());
     }
 
     @Test

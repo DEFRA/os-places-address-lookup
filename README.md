@@ -1,4 +1,4 @@
-# OS places address lookup
+# OS Places address lookup
 
 [![Build Status](https://travis-ci.org/DEFRA/os-places-address-lookup.svg?branch=master)](https://travis-ci.org/DEFRA/os-places-address-lookup)
 
@@ -57,7 +57,7 @@ For these reasons we have configured Maven not to automatically run tests when a
 Once built execute the jar file, providing 'server' and the name of the configuration file as arguments.
 
 ```bash
-java -jar target/address-lookup-osplaces-*.jar server configuration.yml
+java -jar target/os-places-address-lookup-*.jar server configuration.yml
 ```
 
 Once the application server is started you should be able to access the service in your browser. Confirm this by going to [http://localhost:9191](http://localhost:9191) and the operational menu will be visible.
