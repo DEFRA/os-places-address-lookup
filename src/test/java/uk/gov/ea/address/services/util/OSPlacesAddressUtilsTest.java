@@ -1,6 +1,5 @@
 package uk.gov.ea.address.services.util;
 
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import junit.framework.Assert;
@@ -16,7 +15,6 @@ import org.mockito.MockitoAnnotations;
 import uk.gov.ea.address.services.core.Address;
 import uk.gov.ea.address.services.exception.OSPlacesClientException;
 
-import com.sun.jersey.api.client.ClientResponse;
 
 public class OSPlacesAddressUtilsTest
 {
@@ -24,7 +22,7 @@ public class OSPlacesAddressUtilsTest
     private Exception exception;
 
     @Mock
-    private ClientResponse clientResponse;
+    private Response clientResponse;
 
     @Before
     public void setUp()
@@ -96,7 +94,7 @@ public class OSPlacesAddressUtilsTest
     public void testValidateResponseInvalid() throws OSPlacesClientException
     {
         Mockito.when(clientResponse.getStatus()).thenReturn(400);
-        Mockito.when(clientResponse.getEntity(String.class)).thenReturn(getExceptionResponse().toString());
+        Mockito.when(clientResponse.readEntity(String.class)).thenReturn(getExceptionResponse().toString());
         try
         {
             OSPlacesAddressUtils.validateResponse(clientResponse);
@@ -105,33 +103,6 @@ public class OSPlacesAddressUtilsTest
         {
             Assert.assertNotNull(e.toString());
         }
-    }
-
-    @Test
-    public void testMap()
-    {
-        MultivaluedMap<String, String> valuedMap = OSPlacesAddressUtils.getMultivaluedMap("testKey");
-        Assert.assertNotNull(valuedMap);
-        Assert.assertNotNull(valuedMap.get("key"));
-        Assert.assertEquals("testKey", valuedMap.get("key").get(0));
-    }
-
-    @Test
-    public void testMapNull()
-    {
-        MultivaluedMap<String, String> valuedMap = OSPlacesAddressUtils.getMultivaluedMap(null);
-        Assert.assertNotNull(valuedMap);
-        Assert.assertNotNull(valuedMap.get("key"));
-        Assert.assertEquals("", valuedMap.get("key").get(0));
-    }
-
-    @Test
-    public void testMapEmpty()
-    {
-        MultivaluedMap<String, String> valuedMap = OSPlacesAddressUtils.getMultivaluedMap("");
-        Assert.assertNotNull(valuedMap);
-        Assert.assertNotNull(valuedMap.get("key"));
-        Assert.assertEquals("", valuedMap.get("key").get(0));
     }
 
     @Test

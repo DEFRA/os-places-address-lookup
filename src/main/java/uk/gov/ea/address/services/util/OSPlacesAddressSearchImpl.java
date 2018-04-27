@@ -1,12 +1,17 @@
 package uk.gov.ea.address.services.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Collections;
+import java.util.*;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.glassfish.jersey.client.ClientResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -15,16 +20,11 @@ import org.slf4j.LoggerFactory;
 import uk.gov.ea.address.services.core.Address;
 import uk.gov.ea.address.services.exception.OSPlacesClientException;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-
 public class OSPlacesAddressSearchImpl implements OSPlacesAddressSearch
 {
     private Client client;
 
-    private WebResource resource;
+    private WebTarget resource;
 
     private String key;
 
@@ -38,8 +38,8 @@ public class OSPlacesAddressSearchImpl implements OSPlacesAddressSearch
     {
         this.key = key;
         this.delimiter = StringUtils.isBlank(delimiter) ? "," : delimiter;
-        client = Client.create(new DefaultClientConfig());
-        resource = client.resource(url);
+        client = ClientBuilder.newClient();
+        resource = client.target(url);
     }
 
     @Override
@@ -49,10 +49,15 @@ public class OSPlacesAddressSearchImpl implements OSPlacesAddressSearch
 
         try
         {
-            MultivaluedMap<String, String> queryParams = OSPlacesAddressUtils.getMultivaluedMap(key);
-            queryParams.add("query", ORDNANCE_SURVEY);
+            WebTarget target = resource.path("find");
+            Map<String, String> queryStrings = new HashMap<>();
+            queryStrings.put("key", key);
+            queryStrings.put("query", ORDNANCE_SURVEY);
+            target = OSPlacesAddressUtils.getParams(target, queryStrings);
 
-            ClientResponse response = resource.path("find").queryParams(queryParams).get(ClientResponse.class);
+            Invocation.Builder invocationBuilder =
+                    target.request(MediaType.APPLICATION_JSON_TYPE);
+            Response response = invocationBuilder.get();
 
             OSPlacesAddressUtils.validateResponse(response);
 
@@ -86,20 +91,26 @@ public class OSPlacesAddressSearchImpl implements OSPlacesAddressSearch
 
         try
         {
-            MultivaluedMap<String, String> queryParams = OSPlacesAddressUtils.getMultivaluedMap(key);
+            WebTarget target = resource.path("postcode");
+            Map<String, String> queryStrings = new HashMap<>();
+            queryStrings.put("key", key);
 
             if (null != postcode)
             {
-                queryParams.add("postcode", postcode);
+                queryStrings.put("postcode", postcode);
             }
 
-            ClientResponse response = resource.path("postcode").queryParams(queryParams).get(ClientResponse.class);
+            target = OSPlacesAddressUtils.getParams(target, queryStrings);
+
+            Invocation.Builder invocationBuilder =
+                    target.request(MediaType.APPLICATION_JSON_TYPE);
+            Response response = invocationBuilder.get();
 
             OSPlacesAddressUtils.validateResponse(response);
 
             logger.info("response - {}", response);
 
-            JSONArray jArray = new JSONObject(response.getEntity(String.class)).optJSONArray("results");
+            JSONArray jArray = new JSONObject(response.readEntity(String.class)).optJSONArray("results");
 
             if (null != jArray && jArray.length() > 0)
             {
@@ -149,20 +160,26 @@ public class OSPlacesAddressSearchImpl implements OSPlacesAddressSearch
 
         try
         {
-            MultivaluedMap<String, String> queryParams = OSPlacesAddressUtils.getMultivaluedMap(key);
+            WebTarget target = resource.path("uprn");
+            Map<String, String> queryStrings = new HashMap<>();
+            queryStrings.put("key", key);
 
             if (null != moniker)
             {
-                queryParams.add("uprn", moniker);
+                queryStrings.put("uprn", moniker);
             }
 
-            ClientResponse response = resource.path("uprn").queryParams(queryParams).get(ClientResponse.class);
+            target = OSPlacesAddressUtils.getParams(target, queryStrings);
+
+            Invocation.Builder invocationBuilder =
+                    target.request(MediaType.APPLICATION_JSON_TYPE);
+            Response response = invocationBuilder.get();
 
             OSPlacesAddressUtils.validateResponse(response);
 
             logger.info("response - {}", response);
 
-            JSONArray jArray = new JSONObject(response.getEntity(String.class)).optJSONArray("results");
+            JSONArray jArray = new JSONObject(response.readEntity(String.class)).optJSONArray("results");
 
             if (jArray == null)
             {

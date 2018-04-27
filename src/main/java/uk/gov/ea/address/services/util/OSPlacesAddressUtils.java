@@ -2,18 +2,19 @@ package uk.gov.ea.address.services.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.glassfish.jersey.client.ClientResponse;
 import org.json.JSONObject;
 
 import uk.gov.ea.address.services.core.Address;
 import uk.gov.ea.address.services.exception.OSPlacesClientException;
-
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 public class OSPlacesAddressUtils
 {
@@ -32,19 +33,21 @@ public class OSPlacesAddressUtils
         return null;
     }
 
-    public static void validateResponse(ClientResponse response) throws OSPlacesClientException
+    public static void validateResponse(Response response) throws OSPlacesClientException
     {
         if (response.getStatus() != 200)
         {
-            throw new OSPlacesClientException(response.getEntity(String.class));
+            throw new OSPlacesClientException(response.readEntity(String.class));
         }
     }
 
-    public static MultivaluedMap<String, String> getMultivaluedMap(String key)
+    public static WebTarget getParams(WebTarget target, Map<String, String> queryStrings)
     {
-        MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
-        queryParams.add("key", key);
-        return queryParams;
+        for (String key: queryStrings.keySet()){
+            String value = queryStrings.get(key);
+            target = target.queryParam(key, value);  //It is important to know queryParam method won't update current WebTarget object, but return a new one.
+        }
+        return target;
     }
 
     public static JSONObject getExceptionResponse()
