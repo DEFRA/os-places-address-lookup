@@ -35,8 +35,8 @@ public class AddressLookupApplicationTest
     public void init()
     {
         MockitoAnnotations.initMocks(this);
-        key = System.getenv("WCRS_ADDRESS_OSPLACES_KEY");
-        url = System.getenv("WCRS_ADDRESS_OSPLACES_URL");
+        key = System.getenv("WCRS_OSPLACES_KEY");
+        url = System.getenv("WCRS_OSPLACES_URL");
         application = new AddressLookupApplication();
     }
 

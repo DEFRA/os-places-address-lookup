@@ -1,7 +1,4 @@
 # http://www.dropwizard.io/1.3.1/docs/manual/configuration.html#man-configuration
-#---------------------------------------
-# Server configuration
-#---------------------------------------
 server:
   applicationConnectors:
     - type: http
@@ -9,22 +6,19 @@ server:
   adminConnectors:
     - type: http
       port: 9191
-#---------------------------------------
-# Logging configuration
-#---------------------------------------
+
 logging:
   level: INFO
-
-  loggers:
-    io.dropwizard: INFO
-    
   appenders:
     - type: console
-      
-#---------------------------------------
-# Application properties
-#---------------------------------------
+      timeZone: UTC
+    - type: file
+      currentLogFilename: ${WCRS_ADDR_LOOKUP_LOGFILE:-/srv/java/os-places-address-lookup/logs/run.log}
+      archivedLogFilenamePattern: ${WCRS_ADDR_LOOKUP_LOGFILE_PATTERN:-/srv/java/os-places-address-lookup/logs/run-archive-%d.log.gz}
+      archivedFileCount: 5
+      timeZone: UTC
+
 properties:
-  key: WCRS_ADDRESS_OSPLACES_KEY
+  key: ${WCRS_OSPLACES_KEY}
   url: "https://api.ordnancesurvey.co.uk/places/v1/addresses"
   delimiter: ","
