@@ -12,6 +12,7 @@ pipeline {
     post {
         always {
             archiveArtifacts artifacts: 'target/*.jar', onlyIfSuccessful: true
+            archiveArtifacts artifacts: 'configuration.yml', onlyIfSuccessful: true
             cleanWs cleanWhenFailure: false
         }
     }
