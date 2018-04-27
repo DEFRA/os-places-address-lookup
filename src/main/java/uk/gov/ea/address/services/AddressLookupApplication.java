@@ -19,7 +19,7 @@ import uk.gov.ea.address.services.util.OSPlacesAddressSearchImpl;
 
 public class AddressLookupApplication extends Application<AddressLookupConfiguration>
 {
-    private static final String APPLICATION_NAME = "address-lookup-osplaces";
+    private static final String APPLICATION_NAME = "os-places-address-lookup";
 
     private static Logger logger = LoggerFactory.getLogger(AddressLookupApplication.class);
 
