@@ -23,7 +23,7 @@ git clone https://github.com/DEFRA/os-places-address-lookup && cd os-places-addr
 
 ## Configuration
 
-The file *configuration.yml* represents a template configuration. If you are happy to use the defaults the only value you'll need to replace is `WCRS_ADDRESS_OSPLACES_KEY`.
+The file *configuration.yml* represents a template configuration. If you are happy to use the defaults the only value you'll need to replace is `WCRS_OSPLACES_KEY`.
 
 ## Build
 
@@ -43,8 +43,8 @@ Currently the unit tests included in the project rely on an actual connection to
 
 Also the unit tests cannot read from the [configuration.yml](configuration.yml) as the app would when started, so you must set some environment variables before attempting to run the tests
 
-- `WCRS_ADDRESS_OSPLACES_KEY`
-- `WCRS_ADDRESS_OSPLACES_URL`
+- `WCRS_OSPLACES_KEY`
+- `WCRS_OSPLACES_URL`
 
 For these reasons we have configured Maven not to automatically run tests when a build takes place. Instead those working on the project should manually run the tests as and when required
 

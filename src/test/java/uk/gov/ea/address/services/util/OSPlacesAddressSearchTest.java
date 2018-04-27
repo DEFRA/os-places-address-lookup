@@ -24,8 +24,8 @@ public class OSPlacesAddressSearchTest
     @Before
     public void init()
     {
-        key = System.getenv("WCRS_ADDRESS_OSPLACES_KEY");
-        url = System.getenv("WCRS_ADDRESS_OSPLACES_URL");
+        key = System.getenv("WCRS_OSPLACES_KEY");
+        url = System.getenv("WCRS_OSPLACES_URL");
         osPlacesAddressSearchImpl = new OSPlacesAddressSearchImpl(url, key, delimiter);
     }
 

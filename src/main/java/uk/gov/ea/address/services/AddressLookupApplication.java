@@ -3,6 +3,8 @@ package uk.gov.ea.address.services;
 import java.util.Map;
 
 import io.dropwizard.Application;
+import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
+import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
@@ -22,9 +24,14 @@ public class AddressLookupApplication extends Application<AddressLookupConfigura
     private static Logger logger = LoggerFactory.getLogger(AddressLookupApplication.class);
 
     @Override
-    public void initialize(Bootstrap<AddressLookupConfiguration> arg0)
+    public void initialize(Bootstrap<AddressLookupConfiguration> bootstrap)
     {
-
+        bootstrap.setConfigurationSourceProvider(
+                new SubstitutingSourceProvider(
+                        bootstrap.getConfigurationSourceProvider(),
+                        new EnvironmentVariableSubstitutor(false)
+                )
+        );
     }
 
     public static void main(String[] args) throws Exception
