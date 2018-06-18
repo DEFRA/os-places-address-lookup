@@ -5,7 +5,13 @@ pipeline {
     stages {
         stage('Build project artifacts') {
             steps {
-                sh "./mvnw -B -DskipTests=true -T 1C clean package"
+                // Options are
+                // -B: Run in non-interactive (batch) mode
+                // -D: Define a system property (in this case skip compiling and running tests
+                // -T 1C: Thread count which means run single threaded
+                // clean: remove files from a previous build
+                // package: take the compiled code and package it into a fat JAR
+                sh "./mvnw -B -Dmaven.test.skip=true -T 1C clean package"
             }
         }
     }

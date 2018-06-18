@@ -32,10 +32,10 @@ The project uses [Maven](https://maven.apache.org/) as its build tool, and [Mave
 So to build the project call
 
 ```bash
-./mvnw clean package
+./mvnw -B -Dmaven.test.skip=true -T 1C clean package
 ```
 
-The normal command on a machine where Maven is installed is `mvn clean package`.
+N.B. If maven was installed all on the machine you would swap `./mvnw` with `mvn`.
 
 ## Run tests
 
@@ -46,7 +46,7 @@ Also the unit tests cannot read from the [configuration.yml](configuration.yml) 
 - `WCRS_OSPLACES_KEY`
 - `WCRS_OSPLACES_URL`
 
-For these reasons we have configured Maven not to automatically run tests when a build takes place. Instead those working on the project should manually run the tests as and when required
+Hence the command to build above includes the option to skip tests. Instead we advise those working on the project should manually run the tests as and when required using
 
 ```bash
 ./mvnw test
