@@ -65,35 +65,34 @@ public class AddressUtils
         List<String> lines = new ArrayList<String>();
         Address address = new Address();
 
-        address.setUprn(json.optString("UPRN"));
-        address.setPostcode(json.optString("POSTCODE"));
-        address.setTown(json.optString("POST_TOWN"));
-        address.setCountry("");
-        address.setEasting(String.valueOf(json.optLong("X_COORDINATE")));
-        address.setNorthing(String.valueOf(json.optLong("Y_COORDINATE")));
-        address.setMoniker(address.getUprn());
-        address.setPartial(json.optString("ADDRESS"));
-        address.setSubBuildingName(json.optString("SUB_BUILDING_NAME"));
-        address.setBuildingName(json.optString("BUILDING_NAME"));
-        address.setThoroughfareName(json.optString("THOROUGHFARE_NAME"));
-        address.setOrganisationName(json.optString("ORGANISATION_NAME"));
-        address.setBuildingNumber(json.optString("BUILDING_NUMBER"));
-        address.setDependentLocality(json.optString("DEPENDENT_LOCALITY"));
-        address.setDependentThroughfare(json.optString("DEPENDENT_THOROUGHFARE_NAME"));
-        address.setAdministrativeArea(json.optString("POST_TOWN"));
-        address.setLocalAuthorityUpdateDate("");
-        address.setRoyalMailUpdateDate("");
-        address.setPostOfficeBoxNumber(json.optString("PO_BOX_NUMBER"));
-        address.setDepartmentName(json.optString("DEPARTMENT_NAME"));
-        address.setDoubleDependentLocality(json.optString("DOUBLE_DEPENDENT_LOCALITY"));
+        List<String> lines = new ArrayList<>();
+        Address address = new Address();
 
-        if (json.has("DEPARTMENT_NAME"))
-        {
-            lines.add(json.getString("DEPARTMENT_NAME"));
-        }
+        address.uprn = json.optString("UPRN");
+        address.postcode = json.optString("POSTCODE");
+        address.town = json.optString("POST_TOWN");
+        address.country = "";
+        address.easting = String.valueOf(json.optLong("X_COORDINATE"));
+        address.northing = String.valueOf(json.optLong("Y_COORDINATE"));
+        address.moniker = address.uprn;
+        address.partial = json.optString("ADDRESS");
+        address.subBuildingName = json.optString("SUB_BUILDING_NAME");
+        address.buildingName = json.optString("BUILDING_NAME");
+        address.thoroughfareName = json.optString("THOROUGHFARE_NAME");
+        address.organisationName = json.optString("ORGANISATION_NAME");
+        address.buildingNumber = json.optString("BUILDING_NUMBER");
+        address.dependentLocality = json.optString("DEPENDENT_LOCALITY");
+        address.dependentThroughfare = json.optString("DEPENDENT_THOROUGHFARE_NAME");
+        address.administrativeArea = json.optString("POST_TOWN");
+        address.localAuthorityUpdateDate = "";
+        address.royalMailUpdateDate = "";
+        address.postOfficeBoxNumber = json.optString("PO_BOX_NUMBER");
+        address.departmentName = json.optString("DEPARTMENT_NAME");
+        address.doubleDependentLocality = json.optString("DOUBLE_DEPENDENT_LOCALITY");
 
-        if (json.has("ORGANISATION_NAME"))
-        {
+        if (json.has("DEPARTMENT_NAME")) lines.add(json.getString("DEPARTMENT_NAME"));
+
+        if (json.has("ORGANISATION_NAME")) {
             lines.add(json.getString("ORGANISATION_NAME"));
         }
         else

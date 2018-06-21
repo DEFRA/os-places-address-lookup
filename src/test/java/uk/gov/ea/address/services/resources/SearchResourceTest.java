@@ -1,89 +1,84 @@
 package uk.gov.ea.address.services.resources;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 import uk.gov.ea.address.services.core.Address;
 import uk.gov.ea.address.services.exception.OSPlacesClientException;
 import uk.gov.ea.address.services.util.AddressSearch;
+import uk.gov.ea.address.services.util.AddressUtils;
 
-public class SearchResultsResourceTest
-{
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.*;
+
+public class SearchResourceTest {
 
     @Mock
-    private AddressSearch osPlacesAddressSearchImpl;
+    private AddressSearch search;
 
-    private SearchResultsResource resource;
+    private SearchResource resource;
 
     @Mock
     private Address address;
 
     @Before
-    public void init()
-    {
+    public void init() {
         MockitoAnnotations.initMocks(this);
-        resource = new SearchResultsResource(osPlacesAddressSearchImpl);
+        resource = new SearchResource(search);
     }
 
     @Test
-    public void testGetAddresses() throws OSPlacesClientException
-    {
+    public void addresses() throws OSPlacesClientException {
+
+        address.uprn = "20001";
+        address.postcode = "SW59BH";
 
         List<Address> addresses = new ArrayList<Address>();
-        Mockito.when(address.getUprn()).thenReturn("20001");
-        Mockito.when(address.getPostcode()).thenReturn("SW59BH");
         addresses.add(address);
-        Mockito.when(osPlacesAddressSearchImpl.getAddresses("", "SW59BH")).thenReturn(addresses);
 
-        List<Address> exAddresses = (List<Address>) resource.getAddresses("", "SW59BH").getEntity();
-        Assert.assertNotNull(exAddresses);
-        Assert.assertEquals(1, exAddresses.size());
+        Mockito.when(search.getAddresses("SW59BH")).thenReturn(addresses);
 
-        Assert.assertEquals("20001", exAddresses.get(0).getUprn());
-        Assert.assertEquals("SW59BH", exAddresses.get(0).getPostcode());
+        List<?> exAddresses = (List<?>) resource.addresses("SW59BH", "").getEntity();
+        assertNotNull(exAddresses);
+        assertEquals(1, exAddresses.size());
+
+        Address address = ((Address)exAddresses.get(0));
+
+        assertEquals("20001", address.uprn);
+        assertEquals("SW59BH", address.postcode);
     }
 
     @Test
-    public void testGetNullAddresses() throws OSPlacesClientException
-    {
-        Mockito.when(osPlacesAddressSearchImpl.getAddresses("", "SW59BH")).thenReturn(null);
-        List<Address> exAddresses = (List<Address>) resource.getAddresses("", "SW59BH").getEntity();
-        Assert.assertNull(exAddresses);
+    public void addressesReturnsNoResults() throws OSPlacesClientException {
+
+        Mockito.when(search.getAddresses("BS15HA")).thenReturn(new ArrayList<>());
+        List<?> exAddresses = (List<?>) resource.addresses("BS15HA", "").getEntity();
+
+        assertTrue(exAddresses.isEmpty());
     }
 
     @Test
-    public void testAddressesWithEmpty()
-    {
-        try
-        {
-            Mockito.when(osPlacesAddressSearchImpl.getAddresses("", "")).thenThrow(OSPlacesClientException.class);
-            resource.getAddresses("", "");
-        }
-        catch (OSPlacesClientException e)
-        {
-            Assert.fail(e.getMessage());
-        }
+    public void address() throws OSPlacesClientException {
+        address.uprn = "20001";
+
+        Mockito.when(search.getAddress("20001")).thenReturn(address);
+
+        Address expectedAddress = (Address) resource.address("20001").getEntity();
+
+        assertNotNull(expectedAddress);
+        assertEquals("20001", expectedAddress.uprn);
     }
 
     @Test
-    public void testAddressesWithNull()
-    {
-        try
-        {
-            Mockito.when(osPlacesAddressSearchImpl.getAddresses(null, null)).thenThrow(OSPlacesClientException.class);
-            resource.getAddresses(null, null);
-        }
-        catch (OSPlacesClientException e)
-        {
-            Assert.fail(e.getMessage());
-        }
+    public void addressWithEmptyUprn() throws OSPlacesClientException {
+        Mockito.when(search.getAddress("")).thenThrow(new OSPlacesClientException(AddressUtils.getExceptionResponse().toString()));
+        Response response = resource.address("");
+
+        assertEquals(400, response.getStatus());
     }
 }

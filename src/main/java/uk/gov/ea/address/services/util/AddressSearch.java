@@ -52,7 +52,7 @@ public class AddressSearch {
                 Address thisAddress = AddressUtils.getAddressByJson(jArray.optJSONObject(i).optJSONObject("DPA"));
                 boolean duplicateFound = false;
                 for (int j = 0; j < addresses.size() && !duplicateFound; j++) {
-                    if (thisAddress.getUprn().equals(addresses.get(j).getUprn()))
+                    if (thisAddress.uprn.equals(addresses.get(j).uprn))
                     {
                         duplicateFound = true;
                     }

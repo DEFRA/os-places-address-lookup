@@ -1,14 +1,13 @@
 package uk.gov.ea.address.services.util;
 
-import java.util.List;
-
-import junit.framework.Assert;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import uk.gov.ea.address.services.core.Address;
 import uk.gov.ea.address.services.exception.OSPlacesClientException;
+
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class AddressSearchTest {
 
@@ -32,7 +31,8 @@ public class AddressSearchTest {
     @Test
     public void testCanSearch() throws OSPlacesClientException {
         AddressSearch search = new AddressSearch(osPlaces);
-        Assert.assertEquals(true, search.canSearch());
+
+        assertEquals(true, search.canSearch());
     }
 
     @Test(expected = Exception.class)
@@ -47,10 +47,10 @@ public class AddressSearchTest {
     public void testGetAddresses() throws OSPlacesClientException {
         AddressSearch search = new AddressSearch(osPlaces);
 
-        List<Address> addresses = search.getAddresses("", "SW59BH");
+        List<Address> addresses = search.getAddresses("SW59BH");
 
-        Assert.assertNotNull(addresses);
-        Assert.assertNotSame(0, addresses.size());
+        assertNotNull(addresses);
+        assertNotSame(0, addresses.size());
     }
 
     @Test(expected = Exception.class)
@@ -58,7 +58,7 @@ public class AddressSearchTest {
 
         AddressSearch search = new AddressSearch(osPlaces);
 
-        search.getAddresses("", null);
+        search.getAddresses(null);
     }
 
     @Test(expected = Exception.class)
@@ -66,7 +66,7 @@ public class AddressSearchTest {
 
         AddressSearch search = new AddressSearch(osPlaces);
 
-        search.getAddresses("", "");
+        search.getAddresses("");
     }
 
     @Test
@@ -76,20 +76,20 @@ public class AddressSearchTest {
 
         Address address = search.getAddress("200010019924");
 
-        Assert.assertNotNull(address);
-        Assert.assertEquals("200010019924", address.getUprn());
-        Assert.assertNotNull(address.getPostcode());
-        Assert.assertNotNull(address.getTown());
-        Assert.assertNotNull(address.getEasting());
-        Assert.assertNotNull(address.getMoniker());
-        Assert.assertNotNull(address.getNorthing());
-        Assert.assertNotNull(address.getPartial());
-        Assert.assertNotNull(address.getLines());
-        Assert.assertNotNull(address.getOrganisationName());
-        Assert.assertNotNull(address.getBuildingName());
-        Assert.assertNotNull(address.getBuildingNumber());
-        Assert.assertNotNull(address.getThoroughfareName());
-        Assert.assertNotNull(address.getSubBuildingName());
+        assertNotNull(address);
+        assertEquals("200010019924", address.uprn);
+        assertNotNull(address.postcode);
+        assertNotNull(address.town);
+        assertNotNull(address.easting);
+        assertNotNull(address.moniker);
+        assertNotNull(address.northing);
+        assertNotNull(address.partial);
+        assertNotNull(address.lines);
+        assertNotNull(address.organisationName);
+        assertNotNull(address.buildingName);
+        assertNotNull(address.buildingNumber);
+        assertNotNull(address.thoroughfareName);
+        assertNotNull(address.subBuildingName);
     }
 
     @Test
@@ -98,23 +98,23 @@ public class AddressSearchTest {
         AddressSearch search = new AddressSearch(osPlaces);
         Address address = search.getAddress("217026675");
 
-        Assert.assertNotNull(address);
-        Assert.assertEquals("217026675", address.getUprn());
-        Assert.assertNotNull(address.getPostcode());
-        Assert.assertNotNull(address.getTown());
-        Assert.assertNotNull(address.getEasting());
-        Assert.assertNotNull(address.getMoniker());
-        Assert.assertNotNull(address.getNorthing());
-        Assert.assertNotNull(address.getPartial());
-        Assert.assertNotNull(address.getLines());
-        Assert.assertNotNull(address.getOrganisationName());
-        Assert.assertNotNull(address.getBuildingName());
-        Assert.assertNotNull(address.getBuildingNumber());
-        Assert.assertNotNull(address.getThoroughfareName());
-        Assert.assertNotNull(address.getSubBuildingName());
-        Assert.assertEquals(address.getThoroughfareName(), address.getLines().get(1));
-        Assert.assertEquals("", address.getOrganisationName());
-        Assert.assertEquals("", address.getBuildingNumber());
+        assertNotNull(address);
+        assertEquals("217026675", address.uprn);
+        assertNotNull(address.postcode);
+        assertNotNull(address.town);
+        assertNotNull(address.easting);
+        assertNotNull(address.moniker);
+        assertNotNull(address.northing);
+        assertNotNull(address.partial);
+        assertNotNull(address.lines);
+        assertNotNull(address.organisationName);
+        assertNotNull(address.buildingName);
+        assertNotNull(address.buildingNumber);
+        assertNotNull(address.thoroughfareName);
+        assertNotNull(address.subBuildingName);
+        assertEquals(address.thoroughfareName, address.lines.get(1));
+        assertEquals("", address.organisationName);
+        assertEquals("", address.buildingNumber);
     }
 
     @Test(expected = Exception.class)
