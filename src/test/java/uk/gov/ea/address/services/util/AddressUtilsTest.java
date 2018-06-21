@@ -16,7 +16,7 @@ import uk.gov.ea.address.services.core.Address;
 import uk.gov.ea.address.services.exception.OSPlacesClientException;
 
 
-public class OSPlacesAddressUtilsTest
+public class AddressUtilsTest
 {
     @Mock
     private Exception exception;
@@ -34,7 +34,7 @@ public class OSPlacesAddressUtilsTest
     public void testGetResponse()
     {
         Mockito.when(exception.getMessage()).thenReturn(getExceptionResponse().toString());
-        Response response = OSPlacesAddressUtils.getResponseException(exception);
+        Response response = AddressUtils.getResponseException(exception);
         Assert.assertEquals(400, response.getStatus());
         Assert.assertNotNull(response.getEntity());
     }
@@ -43,41 +43,41 @@ public class OSPlacesAddressUtilsTest
     public void testGetResponseInvalid()
     {
         Mockito.when(exception.getMessage()).thenReturn(getExceptionResponse().toString());
-        Assert.assertNotNull(OSPlacesAddressUtils.getResponseException(exception));
+        Assert.assertNotNull(AddressUtils.getResponseException(exception));
     }
 
     @Test
     public void testGetResponseNoErrorKey()
     {
         Mockito.when(exception.getMessage()).thenReturn(new JSONObject().toString());
-        Assert.assertNull(OSPlacesAddressUtils.getResponseException(exception));
+        Assert.assertNull(AddressUtils.getResponseException(exception));
     }
 
     @Test
     public void testGetResponseNoStatusKey()
     {
         Mockito.when(exception.getMessage()).thenReturn(getEmptyStatusResponse().toString());
-        Assert.assertNull(OSPlacesAddressUtils.getResponseException(exception));
+        Assert.assertNull(AddressUtils.getResponseException(exception));
     }
 
     @Test
     public void testGetResponseWithNull()
     {
         Mockito.when(exception.getMessage()).thenReturn(null);
-        Assert.assertNull(OSPlacesAddressUtils.getResponseException(exception));
+        Assert.assertNull(AddressUtils.getResponseException(exception));
     }
 
     @Test
     public void testGetNullResponse()
     {
-        Assert.assertNull(OSPlacesAddressUtils.getResponseException(null));
+        Assert.assertNull(AddressUtils.getResponseException(null));
     }
 
     @Test
     public void testGetResponseWithEmpty()
     {
         Mockito.when(exception.getMessage()).thenReturn("");
-        Response response = OSPlacesAddressUtils.getResponseException(exception);
+        Response response = AddressUtils.getResponseException(exception);
         Assert.assertNull(response);
     }
 
@@ -85,7 +85,7 @@ public class OSPlacesAddressUtilsTest
     public void testValidateResponse() throws OSPlacesClientException
     {
         Mockito.when(clientResponse.getStatus()).thenReturn(200);
-        OSPlacesAddressUtils.validateResponse(clientResponse);
+        AddressUtils.validateResponse(clientResponse);
         Assert.assertEquals(200, clientResponse.getStatus());
         Assert.assertNotNull(clientResponse);
     }
@@ -97,7 +97,7 @@ public class OSPlacesAddressUtilsTest
         Mockito.when(clientResponse.readEntity(String.class)).thenReturn(getExceptionResponse().toString());
         try
         {
-            OSPlacesAddressUtils.validateResponse(clientResponse);
+            AddressUtils.validateResponse(clientResponse);
         }
         catch (OSPlacesClientException e)
         {
@@ -110,7 +110,7 @@ public class OSPlacesAddressUtilsTest
     {
         JSONObject jObject = testJson();
 
-        Address address = OSPlacesAddressUtils.getAddressByJson(jObject, ",");
+        Address address = AddressUtils.getAddressByJson(jObject);
 
         Assert.assertNotNull(address.getUprn());
         Assert.assertNotNull(address.getPostcode());
@@ -156,7 +156,7 @@ public class OSPlacesAddressUtilsTest
         Mockito.when(jObject.getString("ORGANISATION_NAME")).thenReturn("ORGANISATION_NAME");
         Mockito.when(jObject.getString("THOROUGHFARE_NAME")).thenReturn("THOROUGHFARE_NAME");
 
-        Address address = OSPlacesAddressUtils.getAddressByJson(jObject, ",");
+        Address address = AddressUtils.getAddressByJson(jObject);
 
         Assert.assertNotNull(address.getThoroughfareName());
         Assert.assertNotNull(address.getOrganisationName());
@@ -188,11 +188,11 @@ public class OSPlacesAddressUtilsTest
         Mockito.when(jObject.getString("PO_BOX_NUMBER")).thenReturn("PO_BOX_NUMBER");
         Mockito.when(jObject.getString("BUILDING_NAME")).thenReturn("BUILDING_NAME");
 
-        Address address = OSPlacesAddressUtils.getAddressByJson(jObject, "#");
+        Address address = AddressUtils.getAddressByJson(jObject);
 
         Assert.assertNotNull(address.getLines());
 
-        Assert.assertEquals("[SUB_BUILDING_NAME#BUILDING_NUMBER#PO_BOX_NUMBER#BUILDING_NAME]", address.getLines().toString());
+        Assert.assertEquals("[SUB_BUILDING_NAME,BUILDING_NUMBER,PO_BOX_NUMBER,BUILDING_NAME]", address.getLines().toString());
     }
 
     @Test
@@ -213,63 +213,17 @@ public class OSPlacesAddressUtilsTest
         Mockito.when(jObject.getString("PO_BOX_NUMBER")).thenReturn("PO_BOX_NUMBER");
         Mockito.when(jObject.getString("BUILDING_NAME")).thenReturn("BUILDING_NAME");
 
-        Address address = OSPlacesAddressUtils.getAddressByJson(jObject, "#");
+        Address address = AddressUtils.getAddressByJson(jObject);
 
         Assert.assertNotNull(address.getLines());
 
-        Assert.assertEquals("[BUILDING_NUMBER#PO_BOX_NUMBER#BUILDING_NAME]", address.getLines().toString());
-    }
-
-    @Test
-    public void testAddressWithNoDelimiter()
-    {
-        JSONObject jObject = testJson();
-
-        Mockito.when(jObject.has("DEPARTMENT_NAME")).thenReturn(false);
-        Mockito.when(jObject.has("ORGANISATION_NAME")).thenReturn(false);
-        Mockito.when(jObject.has("THOROUGHFARE_NAME")).thenReturn(false);
-
-        Mockito.when(jObject.has("SUB_BUILDING_NAME")).thenReturn(false);
-        Mockito.when(jObject.has("BUILDING_NUMBER")).thenReturn(true);
-        Mockito.when(jObject.has("PO_BOX_NUMBER")).thenReturn(true);
-        Mockito.when(jObject.has("BUILDING_NAME")).thenReturn(true);
-
-        Mockito.when(jObject.getString("BUILDING_NUMBER")).thenReturn("BUILDING_NUMBER");
-        Mockito.when(jObject.getString("PO_BOX_NUMBER")).thenReturn("PO_BOX_NUMBER");
-        Mockito.when(jObject.getString("BUILDING_NAME")).thenReturn("BUILDING_NAME");
-
-        Address address = OSPlacesAddressUtils.getAddressByJson(jObject, "");
-
-        Assert.assertEquals(0, address.getLines().size());
-    }
-
-    @Test
-    public void testAddressWithNullDelimiter()
-    {
-        JSONObject jObject = testJson();
-
-        Mockito.when(jObject.has("DEPARTMENT_NAME")).thenReturn(false);
-        Mockito.when(jObject.has("ORGANISATION_NAME")).thenReturn(false);
-        Mockito.when(jObject.has("THOROUGHFARE_NAME")).thenReturn(false);
-
-        Mockito.when(jObject.has("SUB_BUILDING_NAME")).thenReturn(false);
-        Mockito.when(jObject.has("BUILDING_NUMBER")).thenReturn(true);
-        Mockito.when(jObject.has("PO_BOX_NUMBER")).thenReturn(true);
-        Mockito.when(jObject.has("BUILDING_NAME")).thenReturn(true);
-
-        Mockito.when(jObject.getString("BUILDING_NUMBER")).thenReturn("BUILDING_NUMBER");
-        Mockito.when(jObject.getString("PO_BOX_NUMBER")).thenReturn("PO_BOX_NUMBER");
-        Mockito.when(jObject.getString("BUILDING_NAME")).thenReturn("BUILDING_NAME");
-
-        Address address = OSPlacesAddressUtils.getAddressByJson(jObject, null);
-
-        Assert.assertEquals(0, address.getLines().size());
+        Assert.assertEquals("[BUILDING_NUMBER,PO_BOX_NUMBER,BUILDING_NAME]", address.getLines().toString());
     }
 
     @Test
     public void testGetExceptionResp()
     {
-        JSONObject jObject = OSPlacesAddressUtils.getExceptionResponse();
+        JSONObject jObject = AddressUtils.getExceptionResponse();
 
         Assert.assertNotNull(jObject);
         Assert.assertEquals(true, jObject.has("error"));

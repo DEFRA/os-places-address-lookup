@@ -1,20 +1,19 @@
 package uk.gov.ea.address.services.health;
 
-import uk.gov.ea.address.services.util.OSPlacesAddressSearch;
-
 import com.codahale.metrics.health.HealthCheck;
+import uk.gov.ea.address.services.util.IOSPlaces;
 
 public class OSPlacesHealthCheck extends HealthCheck{
     
-    protected final OSPlacesAddressSearch osAddressSearch;
+    protected final IOSPlaces osPlaces;
 
-    public OSPlacesHealthCheck(OSPlacesAddressSearch osAddressSearch) {
-        this.osAddressSearch = osAddressSearch;
+    public OSPlacesHealthCheck(IOSPlaces osPlaces) {
+        this.osPlaces = osPlaces;
     }
 
     @Override
     protected Result check() throws Exception {
-        String message = osAddressSearch.checkHealth();
+        String message = osPlaces.health();
         return message == null ? Result.healthy() : Result.unhealthy(message);
     }
 	

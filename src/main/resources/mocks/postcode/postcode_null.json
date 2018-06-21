@@ -1,0 +1,6 @@
+{
+  "error": {
+    "statuscode": 400,
+    "message": "Parameter postcode cannot be empty."
+  }
+}

@@ -10,13 +10,13 @@ import org.mockito.MockitoAnnotations;
 
 import uk.gov.ea.address.services.core.Address;
 import uk.gov.ea.address.services.exception.OSPlacesClientException;
-import uk.gov.ea.address.services.util.OSPlacesAddressSearchImpl;
+import uk.gov.ea.address.services.util.AddressSearch;
 
 public class AddressResourceTest
 {
 
     @Mock
-    private OSPlacesAddressSearchImpl osPlacesAddressSearchImpl;
+    private AddressSearch osPlacesAddressSearchImpl;
 
     @Mock
     private Address address;

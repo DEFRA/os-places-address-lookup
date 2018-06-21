@@ -1,51 +1,40 @@
 package uk.gov.ea.address.services.resources;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
+import com.codahale.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.gov.ea.address.services.util.AddressSearch;
+import uk.gov.ea.address.services.util.AddressUtils;
 
-import uk.gov.ea.address.services.exception.OSPlacesClientException;
-import uk.gov.ea.address.services.util.OSPlacesAddressSearch;
-import uk.gov.ea.address.services.util.OSPlacesAddressUtils;
-
-import com.codahale.metrics.annotation.Timed;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/addresses/{id}.json")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class AddressResource
-{
+public class AddressResource {
 
     /** The logger */
     private static final Logger logger = LoggerFactory.getLogger(AddressResource.class.getName());
 
-    protected final OSPlacesAddressSearch osAddressSearch;
+    protected final AddressSearch osAddressSearch;
 
-    public AddressResource(OSPlacesAddressSearch osAddressSearch)
-    {
+    public AddressResource(AddressSearch osAddressSearch) {
         this.osAddressSearch = osAddressSearch;
     }
 
     @GET
     @Timed
-    public Response getAddress(@PathParam("id") String id) throws OSPlacesClientException
-    {
+    public Response getAddress(@PathParam("id") String id) {
+
         logger.debug("Get Method Detected at /addresses/{id}.json");
-        try
-        {
+
+        try {
             return Response.ok(osAddressSearch.getAddress(id)).build();
-        }
-        catch (Exception ex)
-        {
-            return OSPlacesAddressUtils.getResponseException(ex);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+            return AddressUtils.getResponseException(ex);
         }
     }
-
 }

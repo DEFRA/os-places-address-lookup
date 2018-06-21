@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import uk.gov.ea.address.services.core.Address;
 import uk.gov.ea.address.services.exception.OSPlacesClientException;
 
-public class OSPlacesAddressUtils
+public class AddressUtils
 {
     public static Response getResponseException(Exception ex)
     {
@@ -60,7 +60,7 @@ public class OSPlacesAddressUtils
         return jObject;
     }
 
-    public static Address getAddressByJson(JSONObject json, String delimiter)
+    public static Address getAddressByJson(JSONObject json)
     {
         List<String> lines = new ArrayList<String>();
         Address address = new Address();
@@ -105,25 +105,22 @@ public class OSPlacesAddressUtils
                 lStr.append(json.getString("SUB_BUILDING_NAME"));
             }
 
-            if (!StringUtils.isBlank(delimiter))
+            if (json.has("BUILDING_NUMBER"))
             {
-                if (json.has("BUILDING_NUMBER"))
-                {
-                    lStr.append(delimiter + json.getString("BUILDING_NUMBER"));
-                }
-
-                if (json.has("PO_BOX_NUMBER"))
-                {
-                    lStr.append(delimiter + json.getString("PO_BOX_NUMBER"));
-                }
-
-                if (json.has("BUILDING_NAME"))
-                {
-                    lStr.append(delimiter + json.getString("BUILDING_NAME"));
-                }
-
-                lines.add(lStr.indexOf(delimiter) == 0 ? lStr.substring(1, lStr.length()) : lStr.toString());
+                lStr.append("," + json.getString("BUILDING_NUMBER"));
             }
+
+            if (json.has("PO_BOX_NUMBER"))
+            {
+                lStr.append("," + json.getString("PO_BOX_NUMBER"));
+            }
+
+            if (json.has("BUILDING_NAME"))
+            {
+                lStr.append("," + json.getString("BUILDING_NAME"));
+            }
+
+            lines.add(lStr.indexOf(",") == 0 ? lStr.substring(1, lStr.length()) : lStr.toString());
 
         }
 

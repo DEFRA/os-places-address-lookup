@@ -1,42 +1,42 @@
 package uk.gov.ea.address.services.health;
 
+import com.codahale.metrics.health.HealthCheck.Result;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
-import com.codahale.metrics.health.HealthCheck.Result;
-
-import uk.gov.ea.address.services.util.OSPlacesAddressSearchImpl;
+import uk.gov.ea.address.services.util.OSPlaces;
 
 public class OSPlacesHealthCheckTest
 {
     @Mock
-    private OSPlacesAddressSearchImpl addressSearchImpl;
+    private OSPlaces osPlaces;
     
     private OSPlacesHealthCheck osPlacesHealthCheck;
     
     @Before
-    public void init()
-    {
+    public void init() {
+
         MockitoAnnotations.initMocks(this);
-        osPlacesHealthCheck = new OSPlacesHealthCheck(addressSearchImpl);
+        osPlacesHealthCheck = new OSPlacesHealthCheck(osPlaces);
     }
 
-    @Ignore("failing for reasons not yet understood")
-    public void testCheck() throws Exception{
+    @Test
+    public void testCheck() throws Exception {
         
-        Mockito.when(addressSearchImpl.checkHealth()).thenReturn(null);
-        Assert.assertEquals(Result.healthy(), osPlacesHealthCheck.check());   
+        Mockito.when(osPlaces.health()).thenReturn(null);
+        Assert.assertEquals(
+                Result.healthy().isHealthy(),
+                osPlacesHealthCheck.check().isHealthy()
+        );
     }
 
-    @Ignore("failing for reasons not yet understood")
-    public void testCheckInvalid() throws Exception{
+    @Test
+    public void testCheckInvalid() throws Exception {
         
-        Mockito.when(addressSearchImpl.checkHealth()).thenReturn("");
+        Mockito.when(osPlaces.health()).thenReturn("");
         Assert.assertEquals(Result.unhealthy(""), osPlacesHealthCheck.check());   
     }
 }
