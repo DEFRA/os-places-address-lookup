@@ -1,7 +1,6 @@
 package uk.gov.ea.address.services.health;
 
 import com.codahale.metrics.health.HealthCheck.Result;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -9,8 +8,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import uk.gov.ea.address.services.util.OSPlaces;
 
-public class OSPlacesHealthCheckTest
-{
+import static org.junit.Assert.assertEquals;
+
+public class OSPlacesHealthCheckTest {
+
     @Mock
     private OSPlaces osPlaces;
     
@@ -18,7 +19,6 @@ public class OSPlacesHealthCheckTest
     
     @Before
     public void init() {
-
         MockitoAnnotations.initMocks(this);
         osPlacesHealthCheck = new OSPlacesHealthCheck(osPlaces);
     }
@@ -27,7 +27,8 @@ public class OSPlacesHealthCheckTest
     public void testCheck() throws Exception {
         
         Mockito.when(osPlaces.health()).thenReturn(null);
-        Assert.assertEquals(
+
+        assertEquals(
                 Result.healthy().isHealthy(),
                 osPlacesHealthCheck.check().isHealthy()
         );
@@ -37,8 +38,8 @@ public class OSPlacesHealthCheckTest
     public void testCheckInvalid() throws Exception {
         
         Mockito.when(osPlaces.health()).thenReturn("");
-
-        Assert.assertEquals(
+        
+        assertEquals(
                 Result.unhealthy("").isHealthy(),
                 osPlacesHealthCheck.check().isHealthy()
         );

@@ -1,26 +1,28 @@
 package uk.gov.ea.address.services.exception;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 
-public class OSPlacesClientExceptionTest
-{
+import static org.junit.Assert.*;
+
+public class OSPlacesClientExceptionTest {
+
     @Test
-    public void testOSPlacesExceptionWithMessage()
-    {
+    public void testOSPlacesExceptionWithMessage() {
+
         OSPlacesClientException ex = new OSPlacesClientException("test");
-        Assert.assertEquals("test", ex.getMessage());
-        Assert.assertEquals("test", ex.toString());
-        Assert.assertNull(ex.getCause());
+
+        assertEquals("test", ex.getMessage());
+        assertEquals("test", ex.toString());
+        assertNull(ex.getCause());
     }
 
     @Test
-    public void testOSPlacesExceptionWithCauseAndMessage()
-    {
+    public void testOSPlacesExceptionWithCauseAndMessage() {
+
         Throwable cause = new Exception("message");
         OSPlacesClientException ex = new OSPlacesClientException("test", cause);
-        Assert.assertNotNull(ex.getCause());
-        Assert.assertEquals("test", ex.getMessage());
+
+        assertNotNull(ex.getCause());
+        assertEquals("test", ex.getMessage());
     }
 }

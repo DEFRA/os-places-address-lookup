@@ -1,11 +1,10 @@
 package uk.gov.ea.address.services;
 
+import junit.framework.Assert;
+import org.junit.Test;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import junit.framework.Assert;
-
-import org.junit.Test;
 
 public class AddressLookupConfigurationTest
 {

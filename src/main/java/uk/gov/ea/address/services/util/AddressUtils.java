@@ -1,31 +1,24 @@
 package uk.gov.ea.address.services.util;
 
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
+import uk.gov.ea.address.services.core.Address;
+import uk.gov.ea.address.services.exception.OSPlacesClientException;
+
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+public class AddressUtils {
 
-import org.apache.commons.lang3.StringUtils;
-import org.glassfish.jersey.client.ClientResponse;
-import org.json.JSONObject;
+    public static Response getResponseException(Exception ex) {
 
-import uk.gov.ea.address.services.core.Address;
-import uk.gov.ea.address.services.exception.OSPlacesClientException;
-
-public class AddressUtils
-{
-    public static Response getResponseException(Exception ex)
-    {
-        if (null != ex && !StringUtils.isBlank(ex.getMessage()))
-        {
+        if (null != ex && !StringUtils.isBlank(ex.getMessage())) {
             JSONObject jObject = new JSONObject(ex.getMessage());
 
-            if (jObject.has("error") && jObject.getJSONObject("error").has("statuscode"))
-            {
+            if (jObject.has("error") && jObject.getJSONObject("error").has("statuscode")) {
                 return Response.status(Integer.valueOf(jObject.getJSONObject("error").get("statuscode").toString()))
                     .entity(jObject.toString()).build();
             }
@@ -33,16 +26,15 @@ public class AddressUtils
         return null;
     }
 
-    public static void validateResponse(Response response) throws OSPlacesClientException
-    {
-        if (response.getStatus() != 200)
-        {
+    public static void validateResponse(Response response) throws OSPlacesClientException {
+
+        if (response.getStatus() != 200) {
             throw new OSPlacesClientException(response.readEntity(String.class));
         }
     }
 
-    public static WebTarget getParams(WebTarget target, Map<String, String> queryStrings)
-    {
+    public static WebTarget getParams(WebTarget target, Map<String, String> queryStrings) {
+
         for (String key: queryStrings.keySet()){
             String value = queryStrings.get(key);
             target = target.queryParam(key, value);  //It is important to know queryParam method won't update current WebTarget object, but return a new one.
@@ -50,20 +42,18 @@ public class AddressUtils
         return target;
     }
 
-    public static JSONObject getExceptionResponse()
-    {
+    public static JSONObject getExceptionResponse() {
+
         JSONObject jObject = new JSONObject();
         JSONObject jObj = new JSONObject();
         jObj.put("message", "Parameters are not valid");
         jObj.put("statuscode", Response.Status.BAD_REQUEST.getStatusCode());
         jObject.put("error", jObj);
+
         return jObject;
     }
 
-    public static Address getAddressByJson(JSONObject json)
-    {
-        List<String> lines = new ArrayList<String>();
-        Address address = new Address();
+    public static Address getAddressByJson(JSONObject json) {
 
         List<String> lines = new ArrayList<>();
         Address address = new Address();
@@ -94,41 +84,26 @@ public class AddressUtils
 
         if (json.has("ORGANISATION_NAME")) {
             lines.add(json.getString("ORGANISATION_NAME"));
-        }
-        else
-        {
+        } else {
             StringBuilder lStr = new StringBuilder();
 
-            if (json.has("SUB_BUILDING_NAME"))
-            {
-                lStr.append(json.getString("SUB_BUILDING_NAME"));
-            }
+            if (json.has("SUB_BUILDING_NAME")) lStr.append(json.getString("SUB_BUILDING_NAME"));
 
-            if (json.has("BUILDING_NUMBER"))
-            {
-                lStr.append("," + json.getString("BUILDING_NUMBER"));
-            }
 
-            if (json.has("PO_BOX_NUMBER"))
-            {
-                lStr.append("," + json.getString("PO_BOX_NUMBER"));
-            }
+            if (json.has("BUILDING_NUMBER")) lStr.append("," + json.getString("BUILDING_NUMBER"));
 
-            if (json.has("BUILDING_NAME"))
-            {
-                lStr.append("," + json.getString("BUILDING_NAME"));
-            }
+
+            if (json.has("PO_BOX_NUMBER")) lStr.append("," + json.getString("PO_BOX_NUMBER"));
+
+
+            if (json.has("BUILDING_NAME")) lStr.append("," + json.getString("BUILDING_NAME"));
 
             lines.add(lStr.indexOf(",") == 0 ? lStr.substring(1, lStr.length()) : lStr.toString());
-
         }
 
-        if (json.has("THOROUGHFARE_NAME"))
-        {
-            lines.add(json.getString("THOROUGHFARE_NAME"));
-        }
+        if (json.has("THOROUGHFARE_NAME")) lines.add(json.getString("THOROUGHFARE_NAME"));
 
-        address.setLines(lines);
+        address.lines = lines;
         
         // Calculate a value that will help us if we need to sort this address.
         address.calculateSortingValue();

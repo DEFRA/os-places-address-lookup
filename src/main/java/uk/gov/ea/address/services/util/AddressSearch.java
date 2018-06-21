@@ -29,13 +29,9 @@ public class AddressSearch {
         return false;
     }
 
-    public List<Address> getAddresses(String houseNumber, String postcode) throws OSPlacesClientException {
+    public List<Address> getAddresses(String postcode) throws OSPlacesClientException {
 
-        logger.info("get addresses method");
-        logger.info("houseNumber - {}", houseNumber);
-        logger.info("postcode - {}", postcode);
-
-        List<Address> addresses = new ArrayList<Address>();
+        List<Address> addresses = new ArrayList<>();
 
         String result = osPlaces.addresses(postcode);
 
