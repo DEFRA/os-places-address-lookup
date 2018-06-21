@@ -37,6 +37,10 @@ public class OSPlacesHealthCheckTest
     public void testCheckInvalid() throws Exception {
         
         Mockito.when(osPlaces.health()).thenReturn("");
-        Assert.assertEquals(Result.unhealthy(""), osPlacesHealthCheck.check());   
+
+        Assert.assertEquals(
+                Result.unhealthy("").isHealthy(),
+                osPlacesHealthCheck.check().isHealthy()
+        );
     }
 }

@@ -23,9 +23,9 @@ properties:
   url: "https://api.ordnancesurvey.co.uk/places/v1/addresses"
   # If enabled the service will not call OS Places and instead read previously
   # recorded results from JSON files in resources
-  mock: ${WCRS_ENABLE_MOCK:-false}
+  mock: ${WCRS_MOCK_ENABLED:-false}
   # To try and more closely mock calling out to OS places you can have the
   # service pause during each call. The default is a best guess at trying to
   # and take into account reading from the json file whilst delaying enough
   # to mimic a normal call to the service (typically 200 to 250 ms)
-  mockDelay: ${WCRS_MOCK_DELAY:-150}
+  mockDelay: ${WCRS_MOCK_DELAY:-200}

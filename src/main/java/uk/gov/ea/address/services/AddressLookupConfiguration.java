@@ -9,20 +9,17 @@ import javax.validation.Valid;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class AddressLookupConfiguration extends Configuration
-{
+public class AddressLookupConfiguration extends Configuration {
 
     @Valid
     @JsonProperty
-    private Map<String, String> properties = new HashMap<String, String>();
+    private Map<String, String> properties = new HashMap<>();
 
-    public Map<String, String> getProperties()
-    {
+    public Map<String, String> getProperties() {
         return properties;
     }
 
-    public void setProperties(Map<String, String> properties)
-    {
+    public void setProperties(Map<String, String> properties) {
         this.properties = properties;
     }
 }

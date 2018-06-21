@@ -1,6 +1,0 @@
-{
-  "error": {
-    "statuscode": 400,
-    "message": "Parameter uprn contains invalid characters. Valid characters are numeric with a maximum of 12 digits."
-  }
-}

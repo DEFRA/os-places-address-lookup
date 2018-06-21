@@ -65,6 +65,8 @@ public class AddressSearch {
             // The data from OS Places doesn't appear to be sorted by house number (for example),
             // so lets make an attempt to sort the results in a useful order.
             java.util.Collections.sort(addresses);
+        } else {
+            throw new OSPlacesClientException(AddressUtils.getExceptionResponse().toString());
         }
 
         return addresses;

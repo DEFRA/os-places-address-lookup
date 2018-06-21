@@ -59,7 +59,7 @@ public class AddressLookupApplicationTest {
 
         application.run(addressLookupConfiguration, environment);
         Mockito.verify(environment, Mockito.times(1)).healthChecks();
-        Mockito.verify(environment, Mockito.times(3)).jersey();
+        Mockito.verify(environment, Mockito.times(1)).jersey();
     }
 
     @Test(expected = Test.None.class)
