@@ -3,8 +3,7 @@ package uk.gov.ea.address.services.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -27,46 +26,63 @@ public class OSPlacesMock implements IOSPlaces {
 
     public String addresses(String postcode) {
 
-        File resource = resourceFile(POSTCODES_PATH, postcode);
+        String response = openResourceFile(POSTCODES_PATH, postcode);
 
-        if (resource == null) resource = noResultsFile(POSTCODES_PATH);
+        if (response == null || response.isEmpty()) response = openResourceFile(POSTCODES_PATH, "no_results");
 
         delay();
 
-        return fileToString(resource);
+        return response;
     }
 
     public String address(String uprn) {
 
-        File resource = resourceFile(UPRN_PATH, uprn);
+        String response = openResourceFile(UPRN_PATH, uprn);
 
-        if (resource == null) resource = noResultsFile(UPRN_PATH);
+        if (response == null || response.isEmpty()) response = openResourceFile(UPRN_PATH, "no_results");
 
         delay();
 
-        return fileToString(resource);
+        return response;
     }
 
     public String health() {
         return null;
     }
 
-    private File resourceFile(String path, String name) {
+    private String openResourceFile(String path, String name) {
 
-        String fullPath = String.format("%s/%s.json", path, name.replaceAll(" ", "").toLowerCase());
+        String content = null;
 
-        URL url = loader.getResource(fullPath);
-        if (url != null) return new File(url.getFile());
+        String resourcePath = String.format("%s/%s.json", path, name.replaceAll(" ", "").toLowerCase());
 
-        return null;
+        InputStream inputStream = loader.getResourceAsStream(resourcePath);
+
+        if (inputStream != null) content = resourceToString(inputStream);
+
+        return content;
     }
 
-    private File noResultsFile(String path) {
-        String fullPath = String.format("%s/no_results.json", path);
+    private String resourceToString(InputStream inputStream) {
 
-        URL url = loader.getResource(fullPath);
+        StringBuilder content = new StringBuilder();
 
-        return new File(url.getFile());
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+            String line;
+
+            while((line = reader.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+
+            reader.close();
+            inputStream.close();
+        } catch (IOException ex) {
+            logger.debug("OSPlacesMock - error converting resource to string: " + ex);
+        }
+
+        return content.toString();
     }
 
     private void delay() {
@@ -76,19 +92,5 @@ public class OSPlacesMock implements IOSPlaces {
         } catch (InterruptedException ex) {
             logger.debug("OSPlacesMock - error pausing: " + ex);
         }
-    }
-
-    private String fileToString(File resource) {
-
-        String content = null;
-
-        try {
-            byte[] encoded = Files.readAllBytes(resource.toPath());
-            content = new String(encoded, StandardCharsets.UTF_8);
-        } catch (IOException ex) {
-            logger.debug("OSPlacesMock - error reading mock file: " + ex);
-        }
-
-        return content;
     }
 }
