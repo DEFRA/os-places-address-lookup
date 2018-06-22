@@ -1,12 +1,9 @@
 package uk.gov.ea.address.services;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.codahale.metrics.health.HealthCheckRegistry;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.setup.Environment;
 import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -14,10 +11,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import com.codahale.metrics.health.HealthCheckRegistry;
+import java.util.HashMap;
+import java.util.Map;
 
-public class AddressLookupApplicationTest
-{
+public class AddressLookupApplicationTest {
+
     @Mock
     private AddressLookupConfiguration addressLookupConfiguration;
 
@@ -27,31 +25,30 @@ public class AddressLookupApplicationTest
     @Mock
     private Environment environment;
 
-    private String key;
-
-    private String url;
+    private Map<String, String> properties;
 
     @Before
-    public void init()
-    {
+    public void init() {
         MockitoAnnotations.initMocks(this);
-        key = System.getenv("WCRS_OSPLACES_KEY");
-        url = System.getenv("WCRS_OSPLACES_URL");
+
+        properties = new HashMap<>();
+        properties.put("url", System.getenv("WCRS_OSPLACES_URL"));
+        properties.put("key", System.getenv("WCRS_OSPLACES_KEY"));
+        properties.put("mock", "false");
+        properties.put("mockDelay", "150");
+
         application = new AddressLookupApplication();
     }
 
     @Test
-    public void testGetName()
-    {
+    public void testGetName() {
         Assert.assertNotNull(application.getName());
         Assert.assertEquals("os-places-address-lookup", application.getName());
     }
 
     @Test
-    public void testRun() throws Exception
-    {
-
-        Mockito.when(addressLookupConfiguration.getProperties()).thenReturn(getPropertyMap());
+    public void testRun() throws Exception {
+        Mockito.when(addressLookupConfiguration.getProperties()).thenReturn(properties);
 
         HealthCheckRegistry healthCheckRegistry = Mockito.mock(HealthCheckRegistry.class);
         JerseyEnvironment je = Mockito.mock(JerseyEnvironment.class);
@@ -62,32 +59,12 @@ public class AddressLookupApplicationTest
 
         application.run(addressLookupConfiguration, environment);
         Mockito.verify(environment, Mockito.times(1)).healthChecks();
-        Mockito.verify(environment, Mockito.times(3)).jersey();
+        Mockito.verify(environment, Mockito.times(1)).jersey();
     }
 
-    @Test
-    public void testRunWithArgs()
-    {
-        try
-        {
-            AddressLookupApplication.main(new String[] { "server", "configuration.yml" });
-        }
-        catch (Exception ex)
-        {
-            Assert.fail(ex.toString());
-        }
+    @Test(expected = Test.None.class)
+    public void testRunWithArgs() throws Exception {
+        AddressLookupApplication.main(new String[] { "server", "configuration.yml" });
     }
 
-    private Map<String, String> getPropertyMap()
-    {
-        return new HashMap<String, String>()
-        {
-            private static final long serialVersionUID = 1L;
-            {
-                put("key", key);
-                put("url", url);
-                put("delimiter", ",");
-            }
-        };
-    }
 }
