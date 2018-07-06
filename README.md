@@ -69,13 +69,13 @@ The following provides examples of how to use the service.
 1) Get a list of all addresses for a given postcode
 
 ```bash
-$ curl -GET localhost:8005/addresses.json?postcode=BS15AH
+$ curl -GET localhost:8005/addresses?postcode=BS15AH
 ```
 
 2) Get the detailed address info for an address given by its unique identifier (moniker or UPRN)
 
 ```bash
-$ curl -GET localhost:8005/addresses/340116.json?
+$ curl -GET localhost:8005/addresses/340116
 ```
 
 ## Contributing to this project
