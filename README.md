@@ -57,7 +57,7 @@ Hence the command to build above includes the option to skip tests. Instead we a
 Once built execute the jar file, providing 'server' and the name of the configuration file as arguments.
 
 ```bash
-java -jar target/os-places-address-lookup-*.jar server configuration.yml
+java -jar target/os-places-address-lookup.jar server configuration.yml
 ```
 
 Once the application server is started you should be able to access the service in your browser. Confirm this by going to [http://localhost:8006](http://localhost:8006) and the operational menu will be visible.
