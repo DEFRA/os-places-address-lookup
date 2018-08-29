@@ -11,7 +11,7 @@ pipeline {
                 // -T 1C: Thread count which means run single threaded
                 // clean: remove files from a previous build
                 // package: take the compiled code and package it into a fat JAR
-                sh "./mvnw -B -Dhttp.proxyPort=${http_proxy_port} -Dhttps.proxyPort=${https_proxy_port} -Dhttps.proxyHost=${https_proxy} -Dhttp.proxyHost=${http_proxy} -Dmaven.test.skip=true -T 1C clean package"
+                sh "./mvnw -Dhttp.proxyPort=${http_proxy_port} -Dhttps.proxyPort=${https_proxy_port} -Dhttps.proxyHost=${https_proxy} -Dhttp.proxyHost=${http_proxy} -B -Dmaven.test.skip=true -T 1C clean package"
             }
         }
     }
