@@ -1,6 +1,6 @@
 # OS Places address lookup
 
-[![Build Status](https://travis-ci.org/DEFRA/os-places-address-lookup.svg?branch=master)](https://travis-ci.org/DEFRA/os-places-address-lookup)
+[![Build Status](https://travis-ci.com/DEFRA/os-places-address-lookup.svg?branch=master)](https://travis-ci.com/DEFRA/os-places-address-lookup)
 
 A REST based wrapper built using [Dropwizard](http://dropwizard.io/) around the [OS Places API](http://www.ordnancesurvey.co.uk/business-and-government/products/os-places/index.html).
 
