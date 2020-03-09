@@ -1,7 +1,17 @@
+addons:
+  sonarcloud:
+    organization: "defra"
+
 language: java
 
 jdk:
   - openjdk8
+
+# Travis CI uses shallow clone to speed up build times, but a truncated SCM
+# history may cause issues when SonarCloud computes blame data. To avoid this,
+# you can access the full SCM history with `depth: false`
+git:
+  depth: false
 
 env:
   global:
@@ -9,4 +19,6 @@ env:
     - secure: "dMlpKaW5J9WU9aQ7LrpaAl+gfVk3Ie8Yz6t4I93zVjJ9w2RyPOpuK9Nzvj8Lw6gQaA4pmM1Lda5yC06uD0+desOIS+tv6+3Zb/HOvlbXKe6DzvAOM505ODU2hS89oce1/d3TRi7UAwy1TLdDm9P2IjHMWHdOWE1yzsQCrF/3rKc="
     - WCRS_OSPLACES_URL="https://api.ordnancesurvey.co.uk/places/v1/addresses"
 
-script: ./mvnw clean test
+script:
+  # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
+  - ./mvnw clean test org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=DEFRA_os-places-address-lookup
