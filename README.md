@@ -1,6 +1,9 @@
 # OS Places address lookup
 
 [![Build Status](https://travis-ci.com/DEFRA/os-places-address-lookup.svg?branch=master)](https://travis-ci.com/DEFRA/os-places-address-lookup)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_os-places-address-lookup&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=DEFRA_os-places-address-lookup)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_os-places-address-lookup&metric=coverage)](https://sonarcloud.io/dashboard?id=DEFRA_os-places-address-lookup)
+[![Licence](https://img.shields.io/badge/Licence-OGLv3-blue.svg)](http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3)
 
 A REST based wrapper built using [Dropwizard](http://dropwizard.io/) around the [OS Places API](http://www.ordnancesurvey.co.uk/business-and-government/products/os-places/index.html).
 
