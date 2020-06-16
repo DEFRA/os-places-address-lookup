@@ -1,7 +1,7 @@
 // Requires the Workspace Cleanup Plugin to be installed before use
 // https://jenkins.io/doc/pipeline/steps/ws-cleanup/
 pipeline {
-    agent { label 'main' }
+    agent { label 'master' }
     stages {
         stage('Build project artifacts') {
             steps {
