@@ -5,7 +5,9 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_os-places-address-lookup&metric=coverage)](https://sonarcloud.io/dashboard?id=DEFRA_os-places-address-lookup)
 [![Licence](https://img.shields.io/badge/Licence-OGLv3-blue.svg)](http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3)
 
-A REST based wrapper built using [Dropwizard](http://dropwizard.io/) around the [OS Places API](http://www.ordnancesurvey.co.uk/business-and-government/products/os-places/index.html).
+> We do not recommend using this project. Contact [Alan Cruikshanks](https://github.com/Cruikshanks) for details and alternatives.
+
+A REST based wrapper built using [Dropwizard](http://dropwizard.io/) around the [OS Places API](http://www.ordnancesurvey.co.uk/business-and-government/products/os-places/index.html). Created for the [Waste Carriers Registration service](https://github.com/DEFRA/ruby-services-team/tree/main/services/wcr), it has since been superseded by other projects.
 
 Not all features of the API are exposed with this service. It was built to support address lookup using a postcode for another service, and to provide the latitude and longitude for a given address.
 
