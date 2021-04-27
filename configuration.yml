@@ -20,7 +20,7 @@ logging:
 
 properties:
   key: ${WCRS_OSPLACES_KEY}
-  url: "https://api.ordnancesurvey.co.uk/places/v1/addresses"
+  url: "https://api.os.uk/search/places/v1"
   # If enabled the service will not call OS Places and instead read previously
   # recorded results from JSON files in resources
   mock: ${WCRS_MOCK_ENABLED:-false}
