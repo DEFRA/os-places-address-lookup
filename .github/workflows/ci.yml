@@ -7,6 +7,8 @@ jobs:
     # You must use a Linux environment when using service containers or container jobs
     runs-on: ubuntu-latest
     env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       WCRS_OSPLACES_KEY: ${{ secrets.WCRS_OSPLACES_KEY }}
       WCRS_OSPLACES_URL: ${{ secrets.WCRS_OSPLACES_URL }}
 
