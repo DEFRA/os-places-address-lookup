@@ -26,8 +26,8 @@ jobs:
 
       - name: Install Java
         uses: actions/setup-java@v1
-          with:
-            java-version: "${{ steps.jvm.outputs.JAVAV }}"
+        with:
+          java-version: "${{ steps.jvm.outputs.JAVAV }}"
 
       # Speeds up workflows by reading the maven packages from cache. Obviously you need to run it at least once, and the
       # the cache will be updated should the pom.xml file change
