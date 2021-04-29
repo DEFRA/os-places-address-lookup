@@ -1,0 +1,52 @@
+name: CI
+
+on: push
+
+jobs:
+  build:
+    # You must use a Linux environment when using service containers or container jobs
+    runs-on: ubuntu-latest
+    env:
+      WCRS_OSPLACES_KEY: ${{ secrets.WCRS_OSPLACES_KEY }}
+      WCRS_OSPLACES_URL: ${{ secrets.WCRS_OSPLACES_URL }}
+
+    steps:
+      # Downloads a copy of the code in your repository before running CI tests
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of sonarcloud analysis
+
+      # Our projects use .java-version files to specify the Java version to use. We can read and then output it as the
+      # result this step. Subsequent steps can then access the value
+      - name: Read Java version
+        run: echo "##[set-output name=JAVAV;]$(cat .java-version)"
+        # Give the step an ID to make it easier to refer to
+        id: jvm
+
+      - name: Install Java
+        uses: actions/setup-java@v1
+          with:
+            java-version: "${{ steps.jvm.outputs.JAVAV }}"
+
+      # Speeds up workflows by reading the maven packages from cache. Obviously you need to run it at least once, and the
+      # the cache will be updated should the pom.xml file change
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      # With maven already installed it should help build times by not running our local version (./mvnw).
+      # The actual maven command does a bunch of things
+      #
+      # - remove build time files
+      # - compile the code and package as a JAR
+      # - run unit tests
+      # - prepare test coverage information
+      # - install the JAR to the local repository (needed to ensure everything is up to date for SonarCloud)
+      # - run the SonarCloud analysis and send result to SonarCloud
+      - name: Build with Maven
+        run: |
+          mvn clean package org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
