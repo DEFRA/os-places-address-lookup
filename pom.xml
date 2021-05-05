@@ -60,7 +60,7 @@
                 <!-- Configuration based on https://www.mkyong.com/maven/jacoco-java-code-coverage-maven-example/ -->
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.2</version>
+                <version>0.8.7</version>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
